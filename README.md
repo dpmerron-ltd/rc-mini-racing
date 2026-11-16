@@ -57,6 +57,20 @@ If you downloaded the ZIP, open Command Prompt in the extracted folder and run `
 
 Keyboard play is available immediately. To try a USB transmitter, connect it, click inside the game and move a control. If it appears under **Drive with**, select it and calibrate. If it does not appear, run `joy.cpl` from the Windows Run dialog to check whether Windows detects it as a game controller. Detection there does not guarantee browser compatibility. The macOS Swift bridge cannot run on Windows; an NB4 that is not exposed to the browser will need additional Windows input support.
 
+## Controller compatibility
+
+Only the **Flysky Noble NB4 on macOS/Safari using the local USB bridge** has been verified in this game. Manufacturer simulator support is not a guarantee that a particular browser will expose the controller through its Gamepad API.
+
+| Controller | Computer connection | Status in RC Mini Racing |
+| --- | --- | --- |
+| **Flysky Noble NB4** | USB cable | **Verified on Mac/Safari** using the local bridge. Windows browser input remains untested. [Flysky documentation](https://www.flysky-cn.com/nb4-gaishu) |
+| **Flysky Noble NB4+** | USB simulator mode | **Candidate; untested.** Its USB identifier may require a change to the Mac bridge. [Manual](https://www.flysky-eu.com/en/transmitter/nb4-plus/manual) |
+| **RadioMaster MT12** | USB simulator connection | **Candidate; untested** on Mac and Windows browsers. [RadioMaster support](https://radiomasterrc.freshdesk.com/support/solutions/articles/64000248356-my-radio-wont-charge-) |
+| **Futaba 10PXR** | USB game-controller mode | **Candidate; untested** in this game. [Futaba documentation](https://futabausa.com/product/10pxr/) |
+| **Other transmitters with compatible receivers** | Receiver → VRC USB adapter → computer | **Candidate; untested.** The adapter reads standard receiver servo outputs; compatibility still depends on the receiver, adapter, operating system and browser. [VRC documentation](https://www.vrcworld.com/support/faq2.aspx?question=7336) |
+
+The receiver-to-USB adapter route can support radios without their own USB simulator mode. Do not assume a transmitter's charging or firmware-update USB port can send driving controls. The included native Mac bridge specifically targets the NB4; it is not a general-purpose bridge for all radios.
+
 ## Controller setup
 
 1. Connect and switch on the transmitter using a USB data cable.
@@ -104,6 +118,14 @@ npx vite preview --host 127.0.0.1
 ```
 
 The build writes a static site to `dist/`. Preview prints its own local URL (normally port 4173). **The macOS native USB bridge is only available through `npm run dev`**, not the production build or preview server. Static hosting supports keyboard and controllers exposed through the browser Gamepad API.
+
+## GitHub Pages hosting
+
+The static game can be hosted on GitHub Pages. Keyboard controls and controllers exposed through the browser Gamepad API can work on the hosted version.
+
+**The NB4 connection verified on Mac/Safari requires the local Swift bridge and is not available on GitHub Pages.** Pages serves static files; it cannot run the Swift reader or the development server's USB event stream. For that setup, use `npm run dev` locally.
+
+Deployment is not configured in this repository yet. To publish this project site, build with Vite's base path set to `/rc-mini-racing/` (for example, `npm run build -- --base=/rc-mini-racing/`), make runtime asset URLs respect that base path, and deploy `dist/` with a GitHub Pages workflow. The current root-relative texture/model URLs need that adjustment before publishing beneath the repository path.
 
 ## Implementation and assets
 
