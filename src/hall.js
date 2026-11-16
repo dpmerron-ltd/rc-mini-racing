@@ -12,7 +12,7 @@ export function buildHall(scene,renderer,manager) {
   function cylinder(radius,length,color,a,b,roughness=.6){const m=new THREE.Mesh(new THREE.CylinderGeometry(radius,radius,length,12),material(color,roughness,.35));m.position.copy(a).lerp(b,.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),b.clone().sub(a).normalize());m.castShadow=true;staticGroup.add(m);return m;}
   function texture(draw,w=1024,h=512){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
   function sign(text,w,h,x,y,z,background='#173b42',color='#ecebe0',rotation=0){const t=texture((ctx,cw,ch)=>{ctx.fillStyle=background;ctx.fillRect(0,0,cw,ch);ctx.fillStyle=color;ctx.font='italic 800 100px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,cw/2,ch/2,cw*.9);},1024,256);const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:t,roughness:.8}));mesh.position.set(x,y,z);mesh.rotation.y=rotation;scene.add(mesh);return mesh;}
-  function pbr(name,repeatX,repeatY){const load=(suffix,srgb=false)=>{const t=loader.load(`/textures/${name}-${suffix}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(repeatX,repeatY);t.anisotropy=Math.min(12,renderer.capabilities.getMaxAnisotropy());if(srgb)t.colorSpace=THREE.SRGBColorSpace;return t;};return {map:load('color',true),normalMap:load('normal'),roughnessMap:load('roughness')};}
+  function pbr(name,repeatX,repeatY){const load=(suffix,srgb=false)=>{const t=loader.load(`${import.meta.env.BASE_URL}textures/${name}-${suffix}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(repeatX,repeatY);t.anisotropy=Math.min(12,renderer.capabilities.getMaxAnisotropy());if(srgb)t.colorSpace=THREE.SRGBColorSpace;return t;};return {map:load('color',true),normalMap:load('normal'),roughnessMap:load('roughness')};}
   const wood=new THREE.MeshStandardMaterial({...pbr('wood',6,5),roughness:.6,normalScale:new THREE.Vector2(.4,.4),color:'#bba58d'});
   const timber=new THREE.Mesh(new THREE.PlaneGeometry(32,25),wood);timber.rotation.x=-Math.PI/2;timber.position.set(0,-.014,0);timber.receiveShadow=true;scene.add(timber);
   // Faded sports-court lines remain visible beyond the carpet edge.
@@ -52,7 +52,7 @@ export function buildHall(scene,renderer,manager) {
     box(.7,.30,.38,'#25302f',x+.5,.15,-8.48,.025);box(.18,.025,.07,'#191f1e',x+.5,.315,-8.48,.008);
     chairPositions.push([x-.5,-9.4,Math.PI],[x+.65,-9.35,Math.PI+.1]);
   }
-  new GLTFLoader(manager).load('/models/chair/chair.gltf',gltf=>{
+  new GLTFLoader(manager).load(`${import.meta.env.BASE_URL}models/chair/chair.gltf`,gltf=>{
     const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3());
     const scale=.86/size.y;
     for(const [x,z,rotation] of chairPositions){const chair=gltf.scene.clone(true);chair.scale.setScalar(scale);chair.position.set(x,-.014-bounds.min.y*scale,z);chair.rotation.y=rotation;chair.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});scene.add(chair);}

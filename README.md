@@ -1,5 +1,7 @@
 # RC Mini Racing
 
+**[Play in your browser](https://dpmerron-ltd.github.io/rc-mini-racing/)**
+
 A browser-based 1/12 Mini/Ministock practice game for indoor carpet circuit racing. Built with Three.js and Vite, with a rostrum camera that follows the car, a whole-circuit view, lap timing, rounded plastic barriers and a furnished club hall.
 
 Drive with a keyboard or a compatible USB controller. The Flysky Noble NB4 has been tested on macOS using the included local USB bridge. Windows controller compatibility depends on whether Windows and the browser expose the transmitter through the Gamepad API; a Windows native NB4 bridge is not included or tested.
@@ -125,7 +127,9 @@ The static game can be hosted on GitHub Pages. Keyboard controls and controllers
 
 **The NB4 connection verified on Mac/Safari requires the local Swift bridge and is not available on GitHub Pages.** Pages serves static files; it cannot run the Swift reader or the development server's USB event stream. For that setup, use `npm run dev` locally.
 
-Deployment is not configured in this repository yet. To publish this project site, build with Vite's base path set to `/rc-mini-racing/` (for example, `npm run build -- --base=/rc-mini-racing/`), make runtime asset URLs respect that base path, and deploy `dist/` with a GitHub Pages workflow. The current root-relative texture/model URLs need that adjustment before publishing beneath the repository path.
+GitHub Actions builds and deploys `dist/` on every push to `main`, or when the **Deploy GitHub Pages** workflow is run manually. The workflow tests the game and builds with `/rc-mini-racing/` as its base path; runtime textures and models respect that path. Local development continues to use `/`.
+
+To test a controller on the hosted game, open the link in Chrome, connect the transmitter using a USB data cable, click the page and move a control. If the device appears under **Drive with**, select it and calibrate. This tests direct browser detection without the local Mac bridge. Controller calibration is stored separately for the hosted site.
 
 ## Implementation and assets
 
